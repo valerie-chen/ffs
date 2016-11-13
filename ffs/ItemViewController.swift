@@ -8,15 +8,22 @@
 
 import UIKit
 import ScrollableGraphView
+import Alamofire
 
 class ItemViewController: UIViewController {
+    
+    var query: String!
+    
     
     let themeColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(query)
+        connectServer()
         setUpView()
-        setUpGraph()
+       // setUpGraph()
+        
 
         // Do any additional setup after loading the view.
     }
@@ -26,11 +33,64 @@ class ItemViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    func encodeQuery(parameter: String) -> String {
+        return NSString(string: parameter).addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+    }
+    
+    func connectServer() {
+        // construct query url
+        let newQuery = encodeQuery(parameter: query!)
+        print(query)
+        let baseURL = "http://66d4943a.ngrok.io/query?q=\(newQuery)"
+        print(baseURL)
+        
+        Alamofire.request(baseURL).responseJSON { response in
+           /* print(response.request)  // original URL request
+            print(response.response) // HTTP URL response
+            print(response.data)     // server data
+            print(response.result)   // result of response serialization */
+            
+            if let JSON = response.result.value {
+                print("JSON: \(JSON)")
+                let resp = JSON as? [NSDictionary]
+                print(resp as Any)
+                // encode as NSDictionary
+               /* do {
+                    
+                     var dict = try JSONSerialization.jsonObject(with: JSON, options: []) as? [String:AnyObject]
+                    print(dict)
+                } catch let error as NSError {
+                    print(error)
+                }*/
+                //self.parseResponse(response: JSON as! NSArray)
+                //self.setUpGraph(response: JSON as! NSArray)
+            }
+        }
+        
+        
+        
+    }
+    func parseResponse(response: NSArray) {
+       /* for x in response{
+            print(x["price"])
+        } */
+        
+    }
+    
     func setUpView() {
         self.view.backgroundColor = self.themeColor
     }
     
-    func setUpGraph() {
+    func setUpGraph(response: NSArray) {
+        /*let prices: [Double]
+        let labels: [String]
+        for x in response {
+            x[
+        
+        } */
+        
+        
+        // graph set up
         let graphFrame = CGRect(x: 0, y: 50, width: super.view.frame.width, height: super.view.frame.height / 3)
         let graphView = ScrollableGraphView(frame: graphFrame)
         let prices: [Double] = [0, 5, 10]
@@ -71,6 +131,7 @@ class ItemViewController: UIViewController {
         graphView.set(data: prices, withLabels: labels)
         self.view.addSubview(graphView)
     }
+    
 
     /*
     // MARK: - Navigation

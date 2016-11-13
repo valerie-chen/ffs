@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:ffs/ConnectAPI.swift">
+   </FileRef>
+   <FileRef
       location = "group:ffs.xcodeproj">
    </FileRef>
    <FileRef

@@ -7,7 +7,9 @@ target 'ffs' do
 
   # Pods for ffs
 
-pod ‘ScrollableGraphView’
+pod 'ScrollableGraphView'
+
+pod 'Alamofire'
 
   target 'ffsTests' do
     inherit! :search_paths
